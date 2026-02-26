@@ -1,7 +1,25 @@
+using Microsoft.EntityFrameworkCore;
+using SinglePageArchitecture.ApplicationServices.Services;
+using SinglePageArchitecture.ApplicationServices.Services.Contracts;
+using SinglePageArchitecture.Models;
+using SinglePageArchitecture.Models.Services.Contracts;
+using SinglePageArchitecture.Models.Services.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+#region [- AddDbContext() -]
+
+var connectionString = builder.Configuration.GetConnectionString("Default");
+builder.Services.AddDbContext<ProjectDbContext>(options => options.UseSqlServer(connectionString));
+
+#endregion
+
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+
+builder.Services.AddScoped<IPersonApplicationService, PersonApplicationService>();
 
 var app = builder.Build();
 
